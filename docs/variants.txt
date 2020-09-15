@@ -1,0 +1,46 @@
+Na, Nm, Nc, Nh : The number of complete blocks of associated data, plaintext, ciphertext, and hash message, respectively
+Ina, Inm, Inc, Inh : Binary variables equal to 1 if the last block of the respective data type is incomplete, and 0 otherwise
+Bla, Blm, Blc, Blh : The number of bytes in the incomplete block of associated data, plaintext, ciphertext, and hash message, respectively
+
+VI
+
+a. Reference software implementation
+	photonbeetleaead128rate128v1
+       	photonbeetlehash256rate32v1
+
+b. Design Goal
+	- Focused on throughput
+	- Constraints: 
+		- 2k LUTs
+		- 0 BRAMs/DSPs
+
+c. Supported maximum sizes of inputs
+	2^50-1
+
+d.  Non-default values of generics and constants
+	N/A
+ 
+e. Block sizes
+	AD Block Size: 128 bits
+	PT/CT Block Size: 128 bits
+	Hash Message Block Size: 32 bits
+
+f. Execution times
+	
+	Execution time of authenticated encryption: 
+		8+(1+28*Na)+Ina+(1+28*Nm)+Blm+Inm+29
+	Execution time of authenticated decryption: 
+		8+(1+28*Na)+Ina+(1+28*Nm)+Blm+Inm+30
+	Execution time for hashing:
+		7+(25*(|Nh-4|))+56
+
+g. Authentication throughput for large messages
+
+    Authentication Throughput for large Na = 128 / (29 * T) = 4.4138 * f
+    Encryption Throughput for large Nm = 128 / (33 * T) = 3.8788 * f
+    Decryption Throughput for large Nc = 128 / (33 * T) = 3.8788 * f
+    Hashing Throughput for large Nh = = 32 / (25 * T) = 1.28 * f
+
+h. Difference between execution times for a new key and the same key
+	
+	5 (4 for s_store_key, 1 for extra wait cycle in s_load_n)
