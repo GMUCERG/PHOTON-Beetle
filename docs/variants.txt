@@ -6,8 +6,8 @@ VI
 
 a. Reference software implementation
 	photonbeetleaead128rate128v1
-       	photonbeetlehash256rate32v1
-	[NIST LWC Round 1 Candidates Page]*
+	photonbeetlehash256rate32v1 @
+	https://csrc.nist.gov/CSRC/media/Projects/Lightweight-Cryptography/documents/round-1/submissions/photon-beetle.zip
 
 b. Design Goal
 	- Focused on throughput
@@ -29,19 +29,20 @@ e. Block sizes
 f. Execution times
 	
 	Execution time of authenticated encryption: 
-		8+(1+28*Na)+Ina+(1+28*Nm)+Blm+Inm+29
+		6 + (1 + 28*Na) + (1 + 33*Nm) + Blm + 29
 	Execution time of authenticated decryption: 
-		8+(1+28*Na)+Ina+(1+28*Nm)+Blm+Inm+30
+		6 + (1 + 28*Na) + (1 + 33*Nm) + Blm + 30
 	Execution time for hashing:
-		7+(25*(|Nh-4|))+56
+		3 + (Nh < 4 ? Nh + Inh : 4) + (25*(Nh > 4 ? Nh-4 : 0)) + 56
 
-g. Authentication throughput for large messages
+g.  Latencies
 
-    Authentication Throughput for large Na = 128 / (29 * T) = 4.4138 * f
-    Encryption Throughput for large Nm = 128 / (33 * T) = 3.8788 * f
-    Decryption Throughput for large Nc = 128 / (33 * T) = 3.8788 * f
-    Hashing Throughput for large Nh = = 32 / (25 * T) = 1.28 * f
+	Latency of authenticated encryption:
+	6
+
+	Latency of authenticated decryption:
+	6
 
 h. Difference between execution times for a new key and the same key
 	
-	5 (4 for s_store_key, 1 for extra wait cycle in s_load_n)
+	6
