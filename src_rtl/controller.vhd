@@ -84,7 +84,7 @@ architecture Behavioral of Controller is
 
 type t_state is 
 (s_idle, s_store_k, s_load_k, s_load_n, s_p256_1, s_p256_2,
-s_ad_init1, s_ad_init2, s_ad, s_ad_xor, s_msg_init, s_msg, s_msg_xor, s_msg_bdo, s_tag_xor, s_tag, 
+s_ad_init, s_ad, s_ad_xor, s_msg_init, s_msg, s_msg_xor, s_msg_bdo, s_tag_xor, s_tag, 
 s_tag_bdo, s_tag_verify, s_auth, s_hash_zero_init,
 s_hash1, s_hash2, s_hash_tag_xor);
 
@@ -460,7 +460,7 @@ begin
                         elsif ad_flag = '0' then
                             bdi_ready <= '1';
                             
-                            next_state <= s_ad_init1;
+                            next_state <= s_ad_init;
                             
                         else
                             next_state <= s_ad;
@@ -484,11 +484,8 @@ begin
                 else
                     next_state <= s_p256_1;
                 end if;
-           
-           when s_ad_init1 =>
-                next_state <= s_ad_init2;
                 
-           when s_ad_init2 =>
+           when s_ad_init =>
                 if bdi_valid = '1' then
                     if bdi_type = HDR_AD then				
                         c1_en <= '1'; -- Set c1 to 2 (first condition met)
@@ -503,7 +500,7 @@ begin
                     end if;
                 else
                     bdi_ready <= '1';
-                    next_state <= s_ad_init2;
+                    next_state <= s_ad_init;
                 end if;
            
            when s_ad =>
@@ -873,44 +870,34 @@ begin
                         
                         if bdi_eoi = '1' then
                             ozs_en <= '1';
+                            
+                            if flag(1) = '1' and bdi_pad_loc = "0000" then
+                                zero_en <= '1';
+                                hash_pad <= '1';
                                 
-                            if iv_input_sel = "11" then
-                                if flag(1) = '1' and bdi_pad_loc = "0000" then
-                                    hash_pad <= '1';
-                                    zero_en <= '1';
-                                    
-                                    next_state <= s_hash_tag_xor;
-                                else
-                                    if bdi_pad_loc = "0000" then
-                                        c0_en <= '1';
-                                        c0_in <= "010";
-                                    end if;
-                                    
-                                    next_state <= s_hash_tag_xor;
+                                next_state <= s_hash_tag_xor;
+                            elsif iv_input_sel = "11" then
+                                if bdi_pad_loc = "0000" then
+                                    c0_en <= '1';
+                                    c0_in <= "010";
                                 end if;
                                 
+                                next_state <= s_hash_tag_xor;
+                                
                             else
-                                if flag(1) = '1' then
-                                    if bdi_pad_loc = "0000" then
-                                        zero_en <= '1';
-                                        hash_pad <= '1';
-                                        next_state <= s_hash_tag_xor;
-                                    else
-                                        iv_we <= '0';
-                                        next_state <= s_hash_tag_xor;
-                                    end if;
-                                else
+                                if bdi_pad_loc = "0000" then
                                     flag_en <= '1';
                                     flag_next <= "10";
                                 
                                     next_state <= s_hash1;
+                                else
+                                    next_state <= s_hash_tag_xor;
                                 end if;
                             end if;
                             
-                            elsif iv_input_sel = "11" then
-                                    
+                        elsif iv_input_sel = "11" then
                             p256_state_en <= '1';
-                            p256_state_next <= "00"; -- Tag-256
+                            p256_state_next <= "00";
                             
                             next_state <= s_p256_1;
                             
