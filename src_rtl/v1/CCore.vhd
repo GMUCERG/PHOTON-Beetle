@@ -71,7 +71,7 @@ signal ozs_input_sel 	: STD_LOGIC;
 signal p256_sel        	: STD_LOGIC;
 
 signal round 			: STD_LOGIC_VECTOR( 3 downto 0 );
-signal flag             : STD_LOGIC;
+signal rho_vb           : STD_LOGIC_VECTOR( 3 downto 0 );
 signal msg_en           : STD_LOGIC;
 signal rho_reg_en       : STD_LOGIC;
 -- Output --
@@ -121,7 +121,7 @@ datapath1: entity work.Datapath(Behavioral)
 
             p256_s => p256_s,
 			p256_sel => p256_sel,
-			flag => flag,
+			rho_vb => rho_vb,
 			msg_en => msg_en,
 		    
 			round => round,
@@ -190,7 +190,7 @@ controller1: entity work.Controller(Behavioral)
 	        p256_sel => p256_sel,
 	        bdo_sel => bdo_sel,
 	        temp_sel => temp_sel,
-	        flag => flag,
+	        rho_vb => rho_vb,
 	        msg_en => msg_en,
 	
 	        -- Register Signals --
