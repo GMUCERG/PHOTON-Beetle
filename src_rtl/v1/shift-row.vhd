@@ -22,15 +22,6 @@
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 
--- Uncomment the following library declaration if using
--- arithmetic functions with Signed or Unsigned values
---use IEEE.NUMERIC_STD.ALL;
-
--- Uncomment the following library declaration if instantiating
--- any Xilinx leaf cells in this code.
---library UNISIM;
---use UNISIM.VComponents.all;
-
 entity Shift_Row is
     generic ( i : in integer := 0 ); -- Row being shifted
     Port (  w : in  STD_LOGIC_VECTOR(31 downto 0);
@@ -46,19 +37,21 @@ signal shiftr_out : STD_LOGIC_VECTOR(31 downto 0);
 
 begin
 
-    gen_shiftr: 
-        if i = 1 generate
-            shiftr_out <= w(27 downto 0) & w(31 downto 28);
-            
-        elsif i = 2 generate
-            shiftr_out <= w(23 downto 0) & w(31 downto 24);
-
-        elsif i = 3 generate
-            shiftr_out <= w(19 downto 0) & w(31 downto 20);
-          
-        else generate
-            shiftr_out <= w;
-    end generate gen_shiftr;
+    gen_shiftr_1: if i = 1 generate
+        shiftr_out <= w(27 downto 0) & w(31 downto 28);
+    end generate gen_shiftr_1;
+    
+    gen_shiftr_2: if i = 2 generate
+        shiftr_out <= w(23 downto 0) & w(31 downto 24);
+    end generate gen_shiftr_2;
+    
+    gen_shiftr_3: if  i = 3 generate
+    	shiftr_out <= w(19 downto 0) & w(31 downto 20);
+    end generate gen_shiftr_3;
+    
+    gen_shiftr_0: if i = 0  generate
+        shiftr_out <= w;
+    end generate gen_shiftr_0;
 
     -- Inputs are from 0 to 3; p256_sel = 1 when processing rows 4 to 7
     y <= shiftr_out when p256_sel = '0' else shiftr_out(15 downto 0) & shiftr_out(31 downto 16);

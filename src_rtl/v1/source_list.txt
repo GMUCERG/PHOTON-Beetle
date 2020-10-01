@@ -1,6 +1,5 @@
-NIST_LWAPI_pkg.vhd
+LWC/NIST_LWAPI_pkg.vhd
 design_pkg.vhd
-ram.vhd
 rom.vhd
 add_sub.vhd
 shift-row.vhd
@@ -15,11 +14,11 @@ datapath.vhd
 ctr.vhd
 controller.vhd
 CCore.vhd
-key_piso.vhd
-fwft_fifo.vhd
-data_sipo.vhd
-data_piso.vhd
-StepDownCountLd.vhd
-PostProcessor.vhd
-PreProcessor.vhd
-LWC.vhd
+LWC/key_piso.vhd
+LWC/fwft_fifo.vhd
+LWC/data_sipo.vhd
+LWC/data_piso.vhd
+LWC/StepDownCountLd.vhd
+LWC/PostProcessor.vhd
+LWC/PreProcessor.vhd
+LWC/LWC.vhd
