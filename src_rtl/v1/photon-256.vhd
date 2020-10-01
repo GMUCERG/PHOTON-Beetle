@@ -1,14 +1,7 @@
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
-
--- Uncomment the following library declaration if using
--- arithmetic functions with Signed or Unsigned values
 use IEEE.NUMERIC_STD.ALL;
 
--- Uncomment the following library declaration if instantiating
--- any Xilinx leaf cells in this code.
---library UNISIM;
---use UNISIM.VComponents.all;
 
 entity Photon_256 is
     Port (  w0  : in  STD_LOGIC_VECTOR(127 downto 0);
@@ -30,18 +23,21 @@ signal addc_in : STD_LOGIC_VECTOR(127 downto 0);
 signal subc_out : STD_LOGIC_VECTOR(127 downto 0);
 signal shiftr_out : STD_LOGIC_VECTOR(127 downto 0);
 signal mcs_out : STD_LOGIC_VECTOR(255 downto 0);
-signal mcs_sig : STD_LOGIC_VECTOR(127 downto 0);
+type tmp_t is array (0 to 3) of STD_LOGIC_VECTOR(2 downto 0);
+signal tmp: tmp_t;
+--signal mcs_sig : STD_LOGIC_VECTOR(127 downto 0);
 
 begin
     
     addc_in <= w0 when p256_sel = '0' else w1;
     
     -- add_sub/shiftr = straightforward transformation
-    gen_add_sub: for ii in 0 to 3 generate 
+    gen_add_sub: for ii in 0 to 3 generate
+    	tmp(ii) <= p256_sel & std_logic_vector(to_unsigned(ii, 2));
 		add_sub1: entity work.Add_and_Sub(addc_subc)
 			port map (
                 rc_in => k,
-                ic_in => p256_sel & std_logic_vector(to_unsigned(ii, 2)),
+                ic_in => tmp(ii),
                 addc_in => addc_in(32*(3-ii)+31 downto 32*(3-ii)),
                 subc_out => subc_out(32*(3-ii)+31 downto 32*(3-ii)));
     end generate gen_add_sub;
