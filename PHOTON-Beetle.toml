@@ -1,0 +1,53 @@
+[project]
+name = "PHOTON-Beetle"
+description = "PHOTON-Beatle GMU CERG"
+developer = "Vivian Ledynh <vledynh@gmu.edu>"
+
+[language]
+vhdl.standard = "08"
+vhdl.synopsys = false
+
+[lwc]
+aead.algorithm = "photonbeetleaead128rate128v1"
+aead.key_reuse = true
+hash.algorithm = "photonbeetlehash256rate32v1"
+block_bits = { AD = 128, PT = 128, HM = 32 }
+
+[rtl]
+sources = [
+    "src_rtl/LWC_config_32.vhd",
+    "src_rtl/LWC/NIST_LWAPI_pkg.vhd",
+    "src_rtl/v1/design_pkg.vhd",
+    "src_rtl/v1/rom.vhd",
+    "src_rtl/v1/add_sub.vhd",
+    "src_rtl/v1/shift-row.vhd",
+    "src_rtl/v1/mcs_rom.vhd",
+    "src_rtl/v1/mcs_matrix.vhd",
+    "src_rtl/v1/mcs.vhd",
+    "src_rtl/v1/photon-256.vhd",
+    "src_rtl/v1/reg.vhd",
+    "src_rtl/v1/ozs.vhd",
+    "src_rtl/v1/rho.vhd",
+    "src_rtl/v1/datapath.vhd",
+    "src_rtl/v1/ctr.vhd",
+    "src_rtl/v1/controller.vhd",
+    "src_rtl/v1/CCore.vhd",
+    "src_rtl/LWC/FIFO.vhd",
+    "src_rtl/LWC/PISO.vhd",
+    "src_rtl/LWC/SIPO.vhd",
+    "src_rtl/LWC/PostProcessor.vhd",
+    "src_rtl/LWC/PreProcessor.vhd",
+    "src_rtl/LWC/LWC.vhd",
+]
+top = "LWC"
+
+[tb]
+sources = ["src_tb/LWC_TB.vhd"]
+top = "LWC_TB"
+
+[tb.generics]
+G_TEST_MODE = 0
+G_MAX_FAILURES = 0
+G_FNAME_PDI.file = "KAT/pdi.txt"
+G_FNAME_SDI.file = "KAT/sdi.txt"
+G_FNAME_DO.file = "KAT/do.txt"
